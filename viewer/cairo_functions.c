@@ -2,7 +2,15 @@
 /* Cairo library functions used for COIL-3D viewer */
 /***************************************************/
 
-#include "cairo.h"
+// Graphical Viewer Libraries
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
+#include <cairo.h>
+#include <cairo-xlib.h>
+
+
+#include "cairo_functions.h"
 
 // Check for Xlib Mouse/Keypress events. All other events are discarded. 
 int cairo_check_event(cairo_surface_t *sfc, int block)

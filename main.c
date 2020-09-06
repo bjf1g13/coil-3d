@@ -13,7 +13,7 @@
 #define USAGE_FMT  "%s [-v] [-p parameter inputfile] [-t technology inputfile]  [-h] \n"
 #define ERR_FOPEN_PARAMETER  "Cant open specified parameter file"
 #define ERR_FOPEN_TECHNOLOGY  "Cant open specified technology file"
-#define ERR_DO_THE_NEEDFUL "Optimiser exited with error"
+#define ERR_RUN_OPTIMISER "Optimiser exited with error"
 #define DEFAULT_PROGNAME "COIL-3D"
 
 extern int errno;
@@ -22,9 +22,8 @@ extern int opterr, optind;
 
 typedef struct {
   int           verbose;
-  uint32_t      flags;
-  FILE         *input;
-  FILE         *output;
+  FILE         *param_input;
+  FILE         *tf_input;
 } options_t;
 
 
@@ -32,6 +31,9 @@ typedef struct {
 #include "solver/solver.h"
 #include "optimiser/optimiser.h"
 #include "viewer/viewer.h"
+
+void usage(char *progname, int opt);
+int run_optimiser(options_t *options);
 
 int main(int argc, char *argv[]) {
 
@@ -43,18 +45,16 @@ int main(int argc, char *argv[]) {
     while ((opt = getopt(argc, argv, OPTSTR)) != EOF)
        switch(opt) {
            case 'p':
-              if (!(options.input = fopen(optarg, "r")) ){
+              if (!(options.param_input = fopen(optarg, "p")) ){
                  perror(ERR_FOPEN_PARAMETER);
                  exit(EXIT_FAILURE);
-                 /* NOTREACHED */
               }
               break;
 
            case 't':
-              if (!(options.input = fopen(optarg, "r")) ){
+              if (!(options.tf_input = fopen(optarg, "t")) ){
                  perror(ERR_FOPEN_TECHNOLOGY);
                  exit(EXIT_FAILURE);
-                 /* NOTREACHED */
               }
               break;
 
@@ -64,10 +64,9 @@ int main(int argc, char *argv[]) {
               break;
        }
 
-    if (do_the_needful(&options) != EXIT_SUCCESS) {
-       perror(ERR_DO_THE_NEEDFUL);
+    if (run_optimiser(&options) != EXIT_SUCCESS) {
+       perror(ERR_RUN_OPTIMISER);
        exit(EXIT_FAILURE);
-       /* NOTREACHED */
     }
 
     return EXIT_SUCCESS;
@@ -78,19 +77,18 @@ void usage(char *progname, int opt) {
    exit(EXIT_FAILURE);
 }
 
-int do_the_needful(options_t *options) {
+int run_optimiser(options_t *options) {
 
    if (!options) {
      errno = EINVAL;
      return EXIT_FAILURE;
    }
 
-   if (!options->input || !options->output) {
+   if (!options->param_input || !options->tf_input) {
      errno = ENOENT;
      return EXIT_FAILURE;
    }
 
-   /* XXX do needful stuff */
-
+   optimiser();
    return EXIT_SUCCESS;
 }

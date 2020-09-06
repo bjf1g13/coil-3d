@@ -1,3 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <libgen.h>
+#include <errno.h>
+#include <string.h>
+#include <getopt.h>
+#include <stdint.h>
+#include <math.h>
+
+#include "coil3dMath.h"
+
 // Calculate the self inductance of the inductor
 double self_inductance(double d_o, double d_i, int n, double mu)
 {
@@ -55,7 +67,7 @@ double capacitance(double l, double s)
 }
 
 // Calculate the efficiency of a given inductor
-double efficiency(double m, double l, double r, double c, double f) {
+double efficiency(double M, double L, double R, double C, double f) {
 
   // Coupling coefficient K = M/L (if both coils are the same)
   double k = M/L;
@@ -99,30 +111,26 @@ double solve(double d_o, double w, double s, int n, double mu, double d, double 
          }
       }
 
-//      double l = draw_inductor(ctx, n, d_o/SCALE, w/SCALE, s/SCALE, tab/SCALE);
+      double l = draw_inductor(ctx, n, d_o/SCALE, w/SCALE, s/SCALE, tab/SCALE);
 
       /* Print Messages */
       double M = mutual_inductance(d_o, d, mu, w, s, n);
       double L = self_inductance(d_o, d_i, n, mu);
       double R = resistance(f, l, w);
       double C = capacitance(l,s);
-      double eta = efficiency(M, L, R, C, f) {
+      double eta = efficiency(M, L, R, C, f);
 
 
       char L_message[50];
       char M_message[50];
-      char k_message[50];
       char R_message[50];
       char C_message[50];
-      char Q_message[50];
       char eta_message[50];
       
       sprintf(L_message, "Self inductance is : %.10e H",L);
       sprintf(M_message, "Mutual inductance is : %.10e H",M);
-      sprintf(k_message, "Coupling Coefficient : %f",k);
       sprintf(R_message, "Rs : %f Ohms",R);
       sprintf(C_message, "C : %.10e F",C);
-      sprintf(Q_message, "Q-Factor : %f",Q);
       sprintf(eta_message, "Efficiency : %f %%",eta*100);
 
 /*

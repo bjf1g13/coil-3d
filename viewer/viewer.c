@@ -1,3 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <libgen.h>
+#include <errno.h>
+#include <string.h>
+#include <getopt.h>
+#include <stdint.h>
+
+// Graphics Libraries for viewer
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
+#include <cairo.h>
+#include <cairo-xlib.h>
+
+#include "viewer.h"
+
+// Window width and height TODO
+#define WIDTH 500
+#define HEIGHT 500 
+
 // Function to draw the grid used as the viewer background
 void draw_grid(cairo_t *ctx)
 {
