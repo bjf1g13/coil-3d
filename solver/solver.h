@@ -12,5 +12,5 @@ double capacitance(double l, double s);
 // Calculate the efficiency of a given inductor
 double efficiency(double m, double l, double r, double c, double f);
 // Run the solver
-double solve(double d_o, double w, double s, int n, double mu, double d, double f, double RL);
+double solve(double d_o, double w, double s, int n, double mu, double d, double f, double RL, cairo_t *ctx);
 #endif // SOLVER_H

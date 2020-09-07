@@ -14,6 +14,9 @@ By default the COIL-3D tool also compiles a lightwight viewer utility to graphic
 
 ## References
 
+## Dependacnies 
+
+sudo apt-get install libconfig-dev
 
 ## File Structure
 

@@ -1,3 +1,4 @@
+// External Includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,6 +7,7 @@
 #include <string.h>
 #include <getopt.h>
 #include <stdint.h>
+#include <math.h>
 
 // Graphics Libraries for viewer
 #include <X11/Xlib.h>
@@ -19,6 +21,7 @@
 // Window width and height TODO
 #define WIDTH 500
 #define HEIGHT 500 
+#define SCALE 1E-6
 
 // Function to draw the grid used as the viewer background
 void draw_grid(cairo_t *ctx)

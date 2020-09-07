@@ -2,6 +2,16 @@
 /* Cairo library functions used for COIL-3D viewer */
 /***************************************************/
 
+// External Includes
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <libgen.h>
+#include <errno.h>
+#include <string.h>
+#include <getopt.h>
+#include <stdint.h>
+
 // Graphical Viewer Libraries
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>

@@ -1,5 +1,8 @@
+/************************/
 /* COIL-3D Main program */
+/************************/
 
+// External Includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -21,13 +24,14 @@ extern char *optarg;
 extern int opterr, optind;
 
 typedef struct {
-  int           verbose;
+  int          verbose;
   FILE         *param_input;
   FILE         *tf_input;
 } options_t;
 
 
 // COIL-3D Functional includes
+#include "viewer/cairo_functions.h"
 #include "solver/solver.h"
 #include "optimiser/optimiser.h"
 #include "viewer/viewer.h"
@@ -38,21 +42,21 @@ int run_optimiser(options_t *options);
 int main(int argc, char *argv[]) {
 
     int opt;
-    options_t options = { 0, 0x0, stdin, stdout };
+    options_t options = { 0, 0x0, stdin };
 
     opterr = 0;
 
     while ((opt = getopt(argc, argv, OPTSTR)) != EOF)
        switch(opt) {
            case 'p':
-              if (!(options.param_input = fopen(optarg, "p")) ){
+              if (!(options.param_input = fopen(optarg, "r")) ){
                  perror(ERR_FOPEN_PARAMETER);
                  exit(EXIT_FAILURE);
               }
               break;
 
            case 't':
-              if (!(options.tf_input = fopen(optarg, "t")) ){
+              if (!(options.tf_input = fopen(optarg, "r")) ){
                  perror(ERR_FOPEN_TECHNOLOGY);
                  exit(EXIT_FAILURE);
               }
@@ -89,6 +93,6 @@ int run_optimiser(options_t *options) {
      return EXIT_FAILURE;
    }
 
-   optimiser();
+   optimiser(200E-6);
    return EXIT_SUCCESS;
 }

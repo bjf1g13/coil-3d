@@ -1,3 +1,4 @@
+// External Includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -8,7 +9,18 @@
 #include <stdint.h>
 #include <math.h>
 
+// Graphics Libraries for viewer
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
+#include <cairo.h>
+#include <cairo-xlib.h>
+
 #include "coil3dMath.h"
+#include "../viewer/viewer.h"
+
+//TODO 
+#define SCALE 1E-6
 
 // Calculate the self inductance of the inductor
 double self_inductance(double d_o, double d_i, int n, double mu)
@@ -69,6 +81,9 @@ double capacitance(double l, double s)
 // Calculate the efficiency of a given inductor
 double efficiency(double M, double L, double R, double C, double f) {
 
+  // TODO make configurable 
+  double RL = 100;
+
   // Coupling coefficient K = M/L (if both coils are the same)
   double k = M/L;
   
@@ -86,7 +101,7 @@ double efficiency(double M, double L, double R, double C, double f) {
 }
 
 // Run the solver
-double solve(double d_o, double w, double s, int n, double mu, double d, double f, double RL )
+double solve(double d_o, double w, double s, int n, double mu, double d, double f, double RL, cairo_t *ctx)
 {
       double tab = d_o /50;
       double d_i = 0.00;

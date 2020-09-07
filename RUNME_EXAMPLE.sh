@@ -1,2 +1,2 @@
 #!/bin/bash
-./COIL-3D -t tech.tf -p param.param
+./COIL-3D -t tech.tf -p optimiser.cfg

@@ -1,6 +1,16 @@
 /********************************************/
 /* Math functions for use in COIL-3D Solver */
 /********************************************/
+ 
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+#include <float.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "coil3dMath.h"
 
 // Function to compute complete eliptic integral of the first kind
 double Complete_Elliptic_Integral_First_Kind(char arg, double x)

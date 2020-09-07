@@ -11,6 +11,8 @@
 #include "../viewer/viewer.h"
 #include "../solver/solver.h"
 
+// Function to round float value var
+int Round(float var);
 int optimiser();
 
 #endif // OPTIMISER_H

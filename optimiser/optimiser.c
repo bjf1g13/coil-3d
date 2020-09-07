@@ -1,3 +1,4 @@
+// External Includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,6 +7,8 @@
 #include <string.h>
 #include <getopt.h>
 #include <stdint.h>
+#include <time.h>
+#include <math.h>
 
 // Graphics Libraries for viewer
 #include <X11/Xlib.h>
@@ -14,18 +17,38 @@
 #include <cairo.h>
 #include <cairo-xlib.h>
 
-#include "optimiser.h"
-
-
 #include "../viewer/viewer.h"
 #include "../viewer/cairo_functions.h"
 #include "../solver/solver.h"
+
+#include "optimiser.h"
 
 // Window width and height TODO
 #define WIDTH 500
 #define HEIGHT 500 
 
-int optimiser()
+#define SCALE 1E-6
+#define W_PRECISION 0.1E-6
+#define S_PRECISION 0.1E-6
+
+#define DELAY 60000
+
+// Function to round float value var
+int Round(float var)
+{
+  double integral;
+  float fraction = (float)modf(var, &integral);
+ 
+  if (fraction >= 0.5)
+    integral += 1;
+  if (fraction <= -0.5)
+    integral -= 1;
+ 
+  return (int)integral;
+}
+
+// Run Optimiser
+int optimiser(double d_o)
 {
    cairo_surface_t *sfc;
    cairo_t *ctx;
@@ -37,7 +60,6 @@ int optimiser()
    double dy0 = 2, dy1 = 1.5, dy2 = 1;
 
    double mu  = 1.256E-6;
-   double d_o  = 0.0;
    double d_i  = 0; // Automatic
    double d   = 70E-6; // Communication Distance
    double g   = 1.1; //1.1
@@ -63,7 +85,7 @@ int optimiser()
    double area = 0.00;
 
    printf("\n##############################################\n");
-   printf("#### COIL-3D | Inductive Link Layout Optimiser ####\n");
+   printf("# COIL-3D | Inductive Link Layout Optimiser ##\n");
    printf("##############################################\n");
 
 
@@ -125,7 +147,7 @@ int optimiser()
             cairo_set_source_rgb (ctx, 0, 0, 0); 
             cairo_paint (ctx);
             draw_grid(ctx);
-            score = try_inductor(d_o, w, s, n, mu, d, f, RL, ctx);
+            score = solve(d_o, w, s, n, mu, d, f, RL, ctx);
             cairo_pop_group_to_source(ctx);
             cairo_paint(ctx);
             cairo_surface_flush(sfc);
@@ -164,7 +186,7 @@ int optimiser()
             cairo_set_source_rgb (ctx, 0, 0, 0); 
             cairo_paint (ctx);
             draw_grid(ctx);
-            score = try_inductor(d_o, w, s, n, mu, d, f, RL, ctx);
+            score = solve(d_o, w, s, n, mu, d, f, RL, ctx);
             cairo_pop_group_to_source(ctx);
             cairo_paint(ctx);
             cairo_surface_flush(sfc);
@@ -194,7 +216,7 @@ int optimiser()
             cairo_set_source_rgb (ctx, 0, 0, 0); 
             cairo_paint (ctx);
             draw_grid(ctx);
-            score = try_inductor(d_o, w, s, n, mu, d, f, RL, ctx);
+            score = solve(d_o, w, s, n, mu, d, f, RL, ctx);
             cairo_pop_group_to_source(ctx);
             cairo_paint(ctx);
             cairo_surface_flush(sfc);
@@ -229,7 +251,7 @@ int optimiser()
                cairo_set_source_rgb (ctx, 0, 0, 0); 
                cairo_paint (ctx);
                draw_grid(ctx);
-               eta = try_inductor(d_o, w, s, n, mu, d, f, RL, ctx);
+               eta = solve(d_o, w, s, n, mu, d, f, RL, ctx);
                cairo_pop_group_to_source(ctx);
                cairo_paint(ctx);
                cairo_surface_flush(sfc);
@@ -275,42 +297,6 @@ int optimiser()
 
       fclose(netlist_fd);
 
-
-
-
-
-      /*if(threed)
-      {
-         FILE *threed_fd = fopen("3D-log.csv", "w");
-         if (threed_fd == NULL)
-         {
-            printf("Error opening 3D file!\n");
-            exit(1);
-         }
-         fprintf(threed_fd, "Fill Factor, Track Width, Efficiency\n");
-         double fill_factor = 0.00;
-         double eta = 0.00;
-         printf("# Generating 3D Plot Data ...\n");
-         for(fill_factor = 0.1; fill_factor < 1; fill_factor+=0.1)
-         {
-            d_i = (d_o*(1 - fill_factor))/(1 + fill_factor);
-            for(width=w_min;width<w_max;w+=W_PRECISION)
-            {
-               n = Round(((d_o - d_i)/2)/(w+s));
-               cairo_push_group(ctx);
-               cairo_set_source_rgb (ctx, 0, 0, 0); 
-               cairo_paint (ctx);
-               draw_grid(ctx);
-               eta = try_inductor(d_o, w, s, n, mu, d, f, RL, ctx);
-               cairo_pop_group_to_source(ctx);
-               cairo_paint(ctx);
-               cairo_surface_flush(sfc);
-               fprintf(threed_fd, "%lf,%lf,%lf\n",fill_factor,width/SCALE,eta );
-            }
-         }
-         fclose(threed_fd);
-      }*/ // Feature not working
-
       printf("# Complete!\n# >");
 
 
@@ -321,7 +307,7 @@ int optimiser()
          cairo_set_source_rgb (ctx, 0, 0, 0); 
          cairo_paint (ctx);
          draw_grid(ctx);
-         score = try_inductor(d_o, w, s, n, mu, d, f, RL, ctx);
+         score = solve(d_o, w, s, n, mu, d, f, RL, ctx);
          //cairo_set_font_size(ctx,13);
          //cairo_set_source_rgb (ctx, 0.2, 1, 0.2); 
          //cairo_move_to(ctx, (WIDTH/2)-40, HEIGHT/2);
@@ -334,83 +320,6 @@ int optimiser()
 
 
 
-
-         /*cairo_push_group(ctx);
-         cairo_paint(ctx);
-         draw_grid(ctx);
-         try_inductor(d_o, w, s, 20, mu, d, ctx);
-         cairo_pop_group_to_source(ctx);
-         cairo_paint(ctx);
-         cairo_surface_flush(sfc);*/
-
-
-/*
-      cairo_push_group(ctx);
-      cairo_set_source_rgb(ctx, 1, 1, 1);
-      cairo_paint(ctx);
-      cairo_move_to(ctx, x0, y0);
-      cairo_line_to(ctx, x1, y1);
-      cairo_line_to(ctx, x2, y2);
-      cairo_line_to(ctx, x0, y0);
-      cairo_set_source_rgb(ctx, 0, 0, 1);
-      cairo_fill_preserve(ctx);
-      cairo_set_line_width(ctx, 5);
-      cairo_set_source_rgb(ctx, 1, 1, 0);
-      cairo_stroke(ctx);
-      cairo_set_source_rgb(ctx, 0, 0, 0);
-      cairo_move_to(ctx, x0, y0);
-      cairo_show_text(ctx, "P0");
-      cairo_move_to(ctx, x1, y1);
-      cairo_show_text(ctx, "P1");
-      cairo_move_to(ctx, x2, y2);
-      cairo_show_text(ctx, "P2");
-      
-      cairo_set_source_rgb(ctx, 1, 1, 1);
-      cairo_paint(ctx);
-      cairo_move_to(ctx, 0, 0);
-      cairo_line_to(ctx, 500, 500);
-      cairo_set_source_rgb(ctx, 0, 0, 1);
-      cairo_fill_preserve(ctx);
-      cairo_set_line_width(ctx, 5);
-      cairo_set_source_rgb(ctx, 1, 1, 0);
-      cairo_stroke(ctx);
-
-      cairo_move_to(ctx, 5, 5);
-      cairo_show_text(ctx, "Self-Inductance");
-	   cairo_pop_group_to_source(ctx);
-      cairo_paint(ctx);
-      cairo_surface_flush(sfc);
-
-      x0 += dx0;
-      y0 += dy0;
-      x1 += dx1;
-      y1 += dy1;
-      x2 += dx2;
-      y2 += dy2;
-      turn(x0, x, &dx0);
-      turn(x1, x, &dx1);
-      turn(x2, x, &dx2);
-      turn(y0, y, &dy0);
-      turn(y1, y, &dy1);
-      turn(y2, y, &dy2);
-
-      switch (cairo_check_event(sfc, 0))
-      {
-         case 0xff53:   // right cursor
-            dx0 *= 2.0;
-            dy0 *= 2.0;
-            break;
-
-         case 0xff51:   // left cursor
-            dx0 /= 2.0;
-            dy0 /= 2.0;
-            break;
-
-         case 0xff1b:   // Esc
-         case -1:       // left mouse button
-            running = 0;
-            break;
-      }*/
 
       nanosleep(&ts, NULL);
    }
