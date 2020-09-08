@@ -4,7 +4,7 @@
 
 #include "config.h"
 
-int read_config(int argc, char **argv)
+float read_config()
 {
 	config_t cfg, *cf;
 	const config_setting_t *retries;

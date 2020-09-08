@@ -17,11 +17,7 @@
 #include <cairo-xlib.h>
 
 #include "viewer.h"
-
-// Window width and height TODO
-#define WIDTH 500
-#define HEIGHT 500 
-#define SCALE 1E-6
+#include "../includes.h"
 
 // Function to draw the grid used as the viewer background
 void draw_grid(cairo_t *ctx)

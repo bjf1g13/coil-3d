@@ -36,6 +36,9 @@ typedef struct {
 #include "optimiser/optimiser.h"
 #include "viewer/viewer.h"
 
+// Parser to read config file
+#include "config.h"
+
 void usage(char *progname, int opt);
 int run_optimiser(options_t *options);
 
@@ -92,7 +95,7 @@ int run_optimiser(options_t *options) {
      errno = ENOENT;
      return EXIT_FAILURE;
    }
-
+   printf("Param input %f", read_config());
    optimiser(200E-6);
    return EXIT_SUCCESS;
 }

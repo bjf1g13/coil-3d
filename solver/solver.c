@@ -19,8 +19,7 @@
 #include "coil3dMath.h"
 #include "../viewer/viewer.h"
 
-//TODO 
-#define SCALE 1E-6
+#include "../includes.h"
 
 // Calculate the self inductance of the inductor
 double self_inductance(double d_o, double d_i, int n, double mu)
@@ -148,7 +147,7 @@ double solve(double d_o, double w, double s, int n, double mu, double d, double 
       sprintf(C_message, "C : %.10e F",C);
       sprintf(eta_message, "Efficiency : %f %%",eta*100);
 
-/*
+
       cairo_set_font_size(ctx,13);
       
       cairo_set_source_rgb (ctx, 1, 1, 1);
@@ -156,21 +155,17 @@ double solve(double d_o, double w, double s, int n, double mu, double d, double 
       cairo_show_text(ctx, L_message);
       cairo_move_to(ctx, 20, 40);
       cairo_show_text(ctx, M_message);
-      cairo_move_to(ctx, 20, 60);
-      cairo_show_text(ctx, k_message);
 
       cairo_set_font_size(ctx,11);
       cairo_move_to(ctx, WIDTH -150, HEIGHT-20);
       cairo_show_text(ctx, R_message);
       cairo_move_to(ctx, WIDTH -150, HEIGHT-40);
       cairo_show_text(ctx, C_message);
-      cairo_move_to(ctx, WIDTH -150, HEIGHT-60);
-      cairo_show_text(ctx, Q_message);
 
       cairo_set_source_rgb (ctx, 0.2, 1, 0.2);
       cairo_set_font_size(ctx,13);
       cairo_move_to(ctx, 20, HEIGHT-20);
       cairo_show_text(ctx, eta_message);
-*/
+
       return eta;
 }

@@ -1,6 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-int read_config(int argc, char **argv);
+float read_config();
 
 #endif // CONFIG_H

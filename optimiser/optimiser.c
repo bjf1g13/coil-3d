@@ -22,16 +22,7 @@
 #include "../solver/solver.h"
 
 #include "optimiser.h"
-
-// Window width and height TODO
-#define WIDTH 500
-#define HEIGHT 500 
-
-#define SCALE 1E-6
-#define W_PRECISION 0.1E-6
-#define S_PRECISION 0.1E-6
-
-#define DELAY 60000
+#include "../includes.h"
 
 // Function to round float value var
 int Round(float var)
@@ -58,7 +49,8 @@ int optimiser(double d_o)
    double x0 = 20, y0 = 20, x1 = 200, y1 = 400, x2 = 450, y2 = 100;
    double dx0 = 1, dx1 = 1.5, dx2 = 2;
    double dy0 = 2, dy1 = 1.5, dy2 = 1;
-
+    
+    // Mu0
    double mu  = 1.256E-6;
    double d_i  = 0; // Automatic
    double d   = 70E-6; // Communication Distance
@@ -281,7 +273,6 @@ int optimiser(double d_o)
          exit(1);
       }
 
-      fprintf(netlist_fd, "*** TOPIC Inductive Coupling Link Netlist ****\n");
       fprintf(netlist_fd, "* 4-Port Model\n");
       fprintf(netlist_fd, "* In: IN+ to IN-\n");
       fprintf(netlist_fd, "* Out: OUT+ to OUT-\n\n");
@@ -308,10 +299,6 @@ int optimiser(double d_o)
          cairo_paint (ctx);
          draw_grid(ctx);
          score = solve(d_o, w, s, n, mu, d, f, RL, ctx);
-         //cairo_set_font_size(ctx,13);
-         //cairo_set_source_rgb (ctx, 0.2, 1, 0.2); 
-         //cairo_move_to(ctx, (WIDTH/2)-40, HEIGHT/2);
-         //cairo_show_text(ctx, "| COMPLETE |");
          cairo_pop_group_to_source(ctx);
          cairo_paint(ctx);
          cairo_surface_flush(sfc);
