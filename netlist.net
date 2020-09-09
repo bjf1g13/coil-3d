@@ -1,8 +1,0 @@
-* 4-Port Model
-* In: IN+ to IN-
-* Out: OUT+ to OUT-
-
-* /home/ubuntu/coil-3d
-L1 IN+ IN- -nanL Rser=0.0000000000e+00 Cpar=-nan
-L1 OUT- OUT+ -nanL Rser=0.0000000000e+00 Cpar=-nan
-K1 L1 L2 -nan.end
