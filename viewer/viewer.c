@@ -17,7 +17,7 @@
 #include <cairo-xlib.h>
 
 #include "viewer.h"
-#include "../includes.h"
+#include "viewer_defines.h"
 
 // Function to draw the grid used as the viewer background
 void draw_grid(cairo_t *ctx)

@@ -22,7 +22,8 @@
 #include "../solver/solver.h"
 
 #include "optimiser.h"
-#include "../includes.h"
+#include "../viewer/viewer_defines.h"
+#include "../solver/solver_defines.h"
 
 // Function to round float value var
 int Round(float var)
@@ -39,7 +40,7 @@ int Round(float var)
 }
 
 // Run Optimiser
-int optimiser(double d_o)
+int optimiser(double * cfg_opts)
 {
    cairo_surface_t *sfc;
    cairo_t *ctx;
@@ -49,24 +50,35 @@ int optimiser(double d_o)
    double x0 = 20, y0 = 20, x1 = 200, y1 = 400, x2 = 450, y2 = 100;
    double dx0 = 1, dx1 = 1.5, dx2 = 2;
    double dy0 = 2, dy1 = 1.5, dy2 = 1;
-    
-    // Mu0
-   double mu  = 1.256E-6;
-   double d_i  = 0; // Automatic
-   double d   = 70E-6; // Communication Distance
-   double g   = 1.1; //1.1
-   double w   = 2E-6;
-   int n   = 16;
-   double s = 2E-6;
-   double f = 500E6;
-   double RL = 100;
-   double w_min = 1E-6;
-   double w_max = 10E-6;
-   double s_min = 0.1E-6;
-   double s_max = 10E-6;
 
-   int logging=0;
-   int threed = 0;
+   // Setup Parameters from configuration file
+    
+   double d_o   = cfg_opts[0];
+   double mu    = cfg_opts[1];
+   double d_i   = cfg_opts[2]; 
+   double d     = cfg_opts[3]; 
+   double g     = PARAM_G; 
+   double w     = DEF_W;
+   int n        = DEF_N;
+   double s     = DEF_S;
+   double f     = cfg_opts[8];
+   double RL    = cfg_opts[9];
+   double w_min = cfg_opts[4];
+   double w_max = cfg_opts[5];
+   double s_min = cfg_opts[6];
+   double s_max = cfg_opts[7];
+   
+   time_t ltime; 
+   ltime=time(NULL);
+
+   printf("\n#################################################\n");
+   printf("### COIL-3D | Inductive Link Layout Optimiser ###\n");
+   printf("#################################################\n");
+
+   printf("# %s# Successfully read config file \n",asctime( localtime(&ltime)));
+   
+   int logging = 0;
+   int threed  = 0;
 
    int running = 1;
 
@@ -75,11 +87,6 @@ int optimiser(double d_o)
    char input_freq[50];
    char input_techfile[100];
    double area = 0.00;
-
-   printf("\n##############################################\n");
-   printf("# COIL-3D | Inductive Link Layout Optimiser ##\n");
-   printf("##############################################\n");
-
 
    if(d_o == 0)
    {
@@ -95,42 +102,17 @@ int optimiser(double d_o)
    cairo_move_to (ctx, 0, 0);
 
    nanosleep(&ts, NULL);
-   printf("# Performing Optimisation ... \n");
+   printf("> %s# Starting  Optimisation \n",asctime( localtime(&ltime)));
+   
    double high_score = 0.00;
    double score = 0.00;
-   int optimal_n = 0;
+   int    optimal_n = 0;
    double optimal_w = 0.0;
    double optimal_s = 0.0;
-   FILE *fill_factor_fd = fopen("fill-factor-log.csv", "w");
-   if (fill_factor_fd == NULL)
-   {
-      printf("Error opening Fill Factor file!\n");
-      exit(1);
-   }
-   FILE *width_space_fd = fopen("width-space-log.csv", "w");
-   if (width_space_fd == NULL)
-   {
-      printf("Error opening Width Space file!\n");
-      exit(1);
-   }
-
-   if(logging)
-   {
-      fprintf(fill_factor_fd, "Fill Factor, Efficiency\n");
-      fprintf(width_space_fd, "Width, Space, Efficiency\n");
-   }
-   else
-   {
-      fclose(fill_factor_fd);
-      fclose(width_space_fd);
-   }
-
-
-
-
+   
    while (running)
    {
-         printf("# Optimising Fill Factor ... \n");
+         printf("> %s# Optimising Fill-Factor \n",asctime( localtime(&ltime)));
          int j;
          for(j = 1;j<d_o/((w+s)*2);j++)
          {
@@ -149,20 +131,11 @@ int optimiser(double d_o)
                high_score = score;
                optimal_n = j;
             }
-            if(logging)
-            {
-               fprintf(fill_factor_fd, "%.10e,%lf\n", (d_o - d_i)/(d_o + d_i),score);
-            }
-
             usleep(DELAY);
-      }
-      if(logging)
-      {
-         fclose(fill_factor_fd);
       }
       d_i = d_o - (optimal_n * 2 * (w + s));
       double fill_factor = (d_o - d_i)/(d_o + d_i);
-      printf("# Optimised Fill Factor: %f\n", fill_factor );
+      printf("> %s# Optimising Fill-Factor Complete - Best Value is : %f \n",asctime( localtime(&ltime)), fill_factor);
       printf("# Optimising Line Width ... \n");
 
       high_score = 0;
@@ -172,8 +145,6 @@ int optimiser(double d_o)
       {
             w = width;
             n = (int)Round(((d_o - d_i)/2)/(w+s));
-            //printf("width:%.10e\n",width );
-            //printf("n: %d\n", n);
             cairo_push_group(ctx);
             cairo_set_source_rgb (ctx, 0, 0, 0); 
             cairo_paint (ctx);
@@ -202,8 +173,6 @@ int optimiser(double d_o)
             s = spacing;
             w = optimal_w;
             n = (int)Round(((d_o - d_i)/2)/(w+s));
-            //printf("width:%.10e\n",width );
-            //printf("n: %d\n", n);
             cairo_push_group(ctx);
             cairo_set_source_rgb (ctx, 0, 0, 0); 
             cairo_paint (ctx);
@@ -248,12 +217,6 @@ int optimiser(double d_o)
                cairo_paint(ctx);
                cairo_surface_flush(sfc);
                usleep(DELAY/10);
-               if((eta>0)&&(eta<1))
-               {
-                  printf("%lf, %lf, %lf\n",width/SCALE,spacing/SCALE,eta*100);
-                  fprintf(width_space_fd, "%lf, %lf, %lf\n",width/SCALE,spacing/SCALE,eta*100);
-               }
-
             }  
 
          }
@@ -267,11 +230,6 @@ int optimiser(double d_o)
 
       /* Generate Netlist */
       FILE *netlist_fd = fopen("netlist.net", "w");
-      if (fill_factor_fd == NULL)
-      {
-         printf("Error opening netlist file!\n");
-         exit(1);
-      }
 
       fprintf(netlist_fd, "* 4-Port Model\n");
       fprintf(netlist_fd, "* In: IN+ to IN-\n");
@@ -290,8 +248,6 @@ int optimiser(double d_o)
 
       printf("# Complete!\n# >");
 
-
-
       while(1)
       {
          cairo_push_group(ctx);
@@ -303,11 +259,6 @@ int optimiser(double d_o)
          cairo_paint(ctx);
          cairo_surface_flush(sfc);
       }
-
-
-
-
-
       nanosleep(&ts, NULL);
    }
 

@@ -11,6 +11,7 @@
 #include <string.h>
 #include <getopt.h>
 #include <stdint.h>
+#include <string.h>
 
 #define OPTSTR "vp:t:h"
 #define USAGE_FMT  "%s [-v] [-p parameter inputfile] [-t technology inputfile]  [-h] \n"
@@ -27,6 +28,7 @@ typedef struct {
   int          verbose;
   FILE         *param_input;
   FILE         *tf_input;
+  char         cfg_file[100];
 } options_t;
 
 
@@ -37,7 +39,7 @@ typedef struct {
 #include "viewer/viewer.h"
 
 // Parser to read config file
-#include "config.h"
+#include "optimiser/config.h"
 
 void usage(char *progname, int opt);
 int run_optimiser(options_t *options);
@@ -52,6 +54,7 @@ int main(int argc, char *argv[]) {
     while ((opt = getopt(argc, argv, OPTSTR)) != EOF)
        switch(opt) {
            case 'p':
+              strcpy(options.cfg_file, optarg);
               if (!(options.param_input = fopen(optarg, "r")) ){
                  perror(ERR_FOPEN_PARAMETER);
                  exit(EXIT_FAILURE);
@@ -95,7 +98,8 @@ int run_optimiser(options_t *options) {
      errno = ENOENT;
      return EXIT_FAILURE;
    }
-   printf("Param input %f", read_config());
-   optimiser(200E-6);
+   double cfg_opt[10];
+   read_config(cfg_opt, options->cfg_file);
+   optimiser(cfg_opt);
    return EXIT_SUCCESS;
 }

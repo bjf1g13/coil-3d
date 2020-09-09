@@ -18,8 +18,8 @@
 
 #include "coil3dMath.h"
 #include "../viewer/viewer.h"
+#include "../viewer/viewer_defines.h"
 
-#include "../includes.h"
 
 // Calculate the self inductance of the inductor
 double self_inductance(double d_o, double d_i, int n, double mu)
