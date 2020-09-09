@@ -6,7 +6,7 @@ The tool takes as its inputs a configuration file (*.cfg) describing the physica
 COIL-3D consists of two main elements: 
 * The solver: a set of mathematical expressions to compute the electrical characteristics of the link directly from its physical parameters (see below),
 
-![COIL-3D Concept](https://github.com/bjf1g13/coil-3d/blob/master/docs/solver.pngi =250x)
+<img src="https://github.com/bjf1g13/coil-3d/blob/master/docs/solver.png" width="100%">
 
 * The optimiser: the optimisation algorithm used to determine best-performing layouts
 
@@ -15,7 +15,7 @@ The tool also provides a gui viewer utility, to visualise the otpimization proce
 2. A DXF file containing the physical inductor geometry
 3. A HFSS project file containing the generated inductor 
 
-![COIL-3D GUI](https://github.com/bjf1g13/coil-3d/blob/master/docs/viewer.png =250x)
+<p align="center"><img src="https://github.com/bjf1g13/coil-3d/blob/master/docs/viewer.png" width="400px"></p>
 
 Variants of COIL-3D have been presented at Design, Automation and Test in Europe Conference and Exhibition (DATE) 2018, and more recently in IEEE Transactions on Very Large Scale Integration (VLSI) Systems, 27 (3).
 If using COIL-3D for your research, please cite this paper:
@@ -26,8 +26,7 @@ A pdf version of this paper can also be [downloaded here](https://eprints.soton.
 
 ## Usage
 
-### Dependancies
-
+### Dependancies
 Compiling COIL-3D tool requires libconfig and cairo to be installed and avaialable on your system. Using the aptitude package manager, these can be installed using:
 ```bash
 sudo apt-get install libconfig-dev
@@ -43,7 +42,18 @@ make
 ```
 
 ### Running COIL-3D
+The COIL-3D tool is, by default, supplied with an example configuration file to specify the maximum inner and outer area of the inductor, the min/max matal width/spacing, the communication distance, the target operating frequency etc.
+This configuration file can be edited as required, and passed to the solver using the command:
 
+```bash
+./COIL-3D -c confifg_file.cfg
+```
+
+An optional argument -o can also be used to specify the name of the output directory where the generated output data/design will be saved:
+
+```bash
+./COIL-3D -c confifg_file.cfg -o inductor_1
+```
 
 ## File Structure
 
