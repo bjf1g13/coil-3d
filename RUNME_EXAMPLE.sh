@@ -1,2 +1,2 @@
 #!/bin/bash
-./COIL-3D -t tech.tf -p example_configuration.cfg
+./COIL-3D -t example_techfile.xml -p example_configuration.cfg

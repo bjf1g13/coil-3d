@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<c:Control xmlns:c="http://www.ansys.com/control" schemaVersion="1.0">
+
+  <Stackup schemaVersion="1.0">
+    <Materials>
+      <Material Name="FR4_epoxy">
+        <Permittivity>
+          <Double>4.4</Double>
+        </Permittivity>
+        <Permeability>
+          <Double>1</Double>
+        </Permeability>
+        <Conductivity>
+          <Double>0</Double>
+        </Conductivity>
+        <DielectricLossTangent>
+          <Double>0.02</Double>
+        </DielectricLossTangent>
+        <MagneticLossTangent>
+          <Double>0</Double>
+        </MagneticLossTangent>
+      </Material>
+      <Material Name="copper">
+        <Permittivity>
+          <Double>1</Double>
+        </Permittivity>
+        <Permeability>
+          <Double>0.999991</Double>
+        </Permeability>
+        <Conductivity>
+          <Double>58000000</Double>
+        </Conductivity>
+        <DielectricLossTangent>
+          <Double>0</Double>
+        </DielectricLossTangent>
+        <MagneticLossTangent>
+          <Double>0</Double>
+        </MagneticLossTangent>
+      </Material>
+      <Material Name="silicon">
+        <Permittivity>
+          <Double>11.9</Double>
+        </Permittivity>
+      </Material>
+      <Material Name="silicon_dioxide">
+        <Permittivity>
+          <Double>4</Double>
+        </Permittivity>
+      </Material>
+    </Materials>
+    <Layers LengthUnit="um">
+      <Layer Color="#44614c" Material="silicon_dioxide" Name="Above" Thickness="5" Type="dielectric"/>
+      <Layer Color="#5c4300" FillMaterial="silicon_dioxide" Material="copper" Name="0" Thickness="0.9" Type="conductor"/>
+      <Layer Color="#868feb" FillMaterial="silicon_dioxide" Material="copper" Name="1" Thickness="0.5" Type="conductor"/>
+      <Layer Color="#8db7ca" FillMaterial="silicon_dioxide" Material="copper" Name="3" Thickness="180" Type="conductor"/>
+      <Layer Color="#1a291f" Material="silicon_dioxide" Name="Below" Thickness="2.78" Type="dielectric"/>
+      <Layer Color="#264a33" Material="silicon" Name="Sub" Thickness="70" Type="dielectric"/>
+      <Layer Color="#264a33" Material="FR4_epoxy" Name="Glue" Thickness="1600" Type="dielectric"/>
+      <Layer Color="#44614c" Material="silicon_dioxide" Name="Above_under" Thickness="5" Type="dielectric"/>
+      <Layer Color="#fd777a" FillMaterial="silicon_dioxide" Material="copper" Name="5" Thickness="0.9" Type="conductor"/>
+      <Layer Color="#f67fc1" FillMaterial="silicon_dioxide" Material="copper" Name="4" Thickness="0.5" Type="conductor"/>
+      <Layer Color="#efa15d" FillMaterial="silicon_dioxide" Material="copper" Name="2" Thickness="0.18" Type="conductor"/>
+      <Layer Color="#1a291f" Material="silicon_dioxide" Name="Below_under" Thickness="2.78" Type="dielectric"/>
+      <Layer Color="#44614c" Material="silicon" Name="Sub_under" Thickness="70" Type="dielectric"/>
+    </Layers>
+  </Stackup>
+
+</c:Control>
