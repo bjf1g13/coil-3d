@@ -6,7 +6,7 @@ The tool takes as its inputs a configuration file (*.cfg) describing the physica
 COIL-3D consists of two main elements: 
 * The solver: a set of mathematical expressions to compute the electrical characteristics of the link directly from its physical parameters (see below),
 
-![COIL-3D Concept](https://github.com/bjf1g13/coil-3d/blob/master/docs/solver.png)
+![COIL-3D Concept](https://github.com/bjf1g13/coil-3d/blob/master/docs/solver.pngi =250x)
 
 * The optimiser: the optimisation algorithm used to determine best-performing layouts
 
@@ -15,7 +15,7 @@ The tool also provides a gui viewer utility, to visualise the otpimization proce
 2. A DXF file containing the physical inductor geometry
 3. A HFSS project file containing the generated inductor 
 
-![COIL-3D GUI](https://github.com/bjf1g13/coil-3d/blob/master/docs/viewer.png)
+![COIL-3D GUI](https://github.com/bjf1g13/coil-3d/blob/master/docs/viewer.png =250x)
 
 Variants of COIL-3D have been presented at Design, Automation and Test in Europe Conference and Exhibition (DATE) 2018, and more recently in IEEE Transactions on Very Large Scale Integration (VLSI) Systems, 27 (3).
 If using COIL-3D for your research, please cite this paper:
@@ -25,22 +25,25 @@ If using COIL-3D for your research, please cite this paper:
 A pdf version of this paper can also be [downloaded here](https://eprints.soton.ac.uk/428192/1/08561260.pdf).
 
 ## Usage
-### Dependacnies 
-The COIL-3D commandline parser uses the libconfig libarary and the COIL-3D viewer uses the 
+
+### Dependancies
+
+Compiling COIL-3D tool requires libconfig and cairo to be installed and avaialable on your system. Using the aptitude package manager, these can be installed using:
+```bash
 sudo apt-get install libconfig-dev
 apt-get install libcairo2-dev
+```
 
 ### Compiling COIL-3D
-The COIL-3D tool can be compiled using the makefile provided, by cloning the repositry and running make:
-```
+Once the required libraries are available, the COIL-3D tool can be compiled using the makefile provided, by cloning the repositry and running make:
+```bash
 git clone https://github.com/bjf1g13/coil-3d.git
-cd coil-3d; make
+cd coil-3d
+make
 ```
-By default the COIL-3D tool also compiles a lightwight viewer utility to graphically show the optimisation process, which relies on X11.lib
-
-![COIL-3D Viewer](https://github.com/bjf1g13/coil-3d/blob/master/docs/viewer.png)
 
 ### Running COIL-3D
+
 
 ## File Structure
 
