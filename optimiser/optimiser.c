@@ -249,8 +249,10 @@ int optimiser(double * cfg_opts, int verbose, char * output_dir)
       /* Generate Netlist */
 
       char netlist_fname[] = "/netlist.net";
-      strcat(output_dir, netlist_fname);
-      FILE *netlist_fd = fopen(output_dir, "w");
+      char netlist_bname[500];
+      strcpy(netlist_bname,output_dir);
+      strcat(netlist_bname, netlist_fname);
+      FILE *netlist_fd = fopen(netlist_bname, "w");
       fprintf(netlist_fd, "* 4-Port Model\n");
       fprintf(netlist_fd, "* In: IN+ to IN-\n");
       fprintf(netlist_fd, "* Out: OUT+ to OUT-\n\n");
@@ -268,13 +270,15 @@ int optimiser(double * cfg_opts, int verbose, char * output_dir)
       /* Generate Outputfile */
 
       char output_fname[] = "/resuts.txt";
-      strcat(output_dir, output_fname);
-      FILE *output_fd = fopen(output_dir, "w");
+      char output_cname[500];
+      strcpy(output_cname,output_dir);
+      strcat(output_cname, output_fname);
+      FILE *output_fd = fopen(output_cname, "w");
       fprintf(output_fd, "Optimal Track Width     : %f m\n", optimal_w );
       fprintf(output_fd, "Optimal Track Spacing   : %f m\n", optimal_s );
       fprintf(output_fd, "Optimal Outer Diameter  : %f m\n", d_o );
-      fprintf(output_fd, "Optimal Number of Turns : %d m\n", optimal_n );
-      fclose(netlist_fd);
+      fprintf(output_fd, "Optimal Number of Turns : %d\n", optimal_n );
+      fclose(output_fd);
       
       if(verbose){
         printf("# Complete!\n# >");
