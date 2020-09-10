@@ -6,7 +6,7 @@ The tool takes as its inputs a configuration file (*.cfg) describing the physica
 COIL-3D consists of two main elements: 
 * The solver: a set of mathematical expressions to compute the electrical characteristics of the link directly from its physical parameters (see below),
 
-<img src="https://github.com/bjf1g13/coil-3d/blob/master/docs/solver.png" width="100%">
+<img src="https://github.com/bjf1g13/coil-3d/blob/master/docs/solver_image.png" width="100%">
 
 * The optimiser: the optimisation algorithm used to determine best-performing layouts
 
@@ -46,7 +46,7 @@ The COIL-3D tool is, by default, supplied with an example configuration file to 
 This configuration file can be edited as required, and passed to the solver using the '-c' flag:
 
 ```bash
-~/coil-3d$ ./COIL-3D -c example_config.cfg -t example_techfile.tf -o inductor_1
+~/coil-3d$ ./COIL-3D -c example_config.cfg -t example_techfile.xml -o inductor_1
 ```
 The tool also takes an HFSS technology file as an argument (using the '-t') flag, to specify the layer thicknesses within the 3D stack. Finally, an optional argument -o can also be used to specify the name of the output directory where the generated output data/design will be saved.
 
