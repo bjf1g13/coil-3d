@@ -1,6 +1,9 @@
-/************************/
-/* COIL-3D Main program */
-/************************/
+/*
+ * COIL-3D Main program 
+ * Ben Fletcher (bjf1g13@soton.ac.uk)
+ *
+ * Copyright (c) 2020, Arm-ECS Research Centre (arm.ecs.soton.ac.uk) 
+ */
 
 // External Includes
 #include <stdio.h>
@@ -12,12 +15,15 @@
 #include <getopt.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
-#define OPTSTR "vp:t:h"
-#define USAGE_FMT  "%s [-v] [-p parameter inputfile] [-t technology inputfile]  [-h] \n"
+#define OPTSTR "vc:t:o:h"
+#define USAGE_FMT  "%s [-v] [-c configuration inputfile] [-t technology inputfile] [-o output dir]  [-h] \n"
 #define ERR_FOPEN_PARAMETER  "Cant open specified parameter file"
 #define ERR_FOPEN_TECHNOLOGY  "Cant open specified technology file"
 #define ERR_RUN_OPTIMISER "Optimiser exited with error"
+#define ERR_OP_DIR "Output directory cannot be created"
 #define DEFAULT_PROGNAME "COIL-3D"
 
 extern int errno;
@@ -29,6 +35,7 @@ typedef struct {
   FILE         *param_input;
   FILE         *tf_input;
   char         cfg_file[100];
+  char         output_dir[100];
 } options_t;
 
 
@@ -53,7 +60,7 @@ int main(int argc, char *argv[]) {
 
     while ((opt = getopt(argc, argv, OPTSTR)) != EOF)
        switch(opt) {
-           case 'p':
+           case 'c':
               strcpy(options.cfg_file, optarg);
               if (!(options.param_input = fopen(optarg, "r")) ){
                  perror(ERR_FOPEN_PARAMETER);
@@ -65,6 +72,14 @@ int main(int argc, char *argv[]) {
               if (!(options.tf_input = fopen(optarg, "r")) ){
                  perror(ERR_FOPEN_TECHNOLOGY);
                  exit(EXIT_FAILURE);
+              }
+              break;
+
+           case 'o':
+              strcpy(options.output_dir, optarg);
+              if (mkdir(optarg, 0777)){
+                perror(ERR_OP_DIR);
+                exit(EXIT_FAILURE);
               }
               break;
 
@@ -100,6 +115,6 @@ int run_optimiser(options_t *options) {
    }
    double cfg_opt[10];
    read_config(cfg_opt, options->cfg_file);
-   optimiser(cfg_opt);
+   optimiser(cfg_opt, options->verbose, options->output_dir);
    return EXIT_SUCCESS;
 }

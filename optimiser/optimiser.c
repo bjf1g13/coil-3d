@@ -1,3 +1,10 @@
+/*
+ * COIL-3D Optimiser Loop
+ * Ben Fletcher (bjf1g13@soton.ac.uk)
+ *
+ * Copyright (c) 2020, Arm-ECS Research Centre (arm.ecs.soton.ac.uk) 
+ */
+
 // External Includes
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,7 +47,7 @@ int Round(float var)
 }
 
 // Run Optimiser
-int optimiser(double * cfg_opts)
+int optimiser(double * cfg_opts, int verbose, char * output_dir)
 {
    cairo_surface_t *sfc;
    cairo_t *ctx;
@@ -90,7 +97,7 @@ int optimiser(double * cfg_opts)
 
    if(d_o == 0)
    {
-      printf("# Error - Please Enter area\n");
+      printf("> Error - Please Enter area\n");
       return 1;
    }
 
