@@ -1,6 +1,9 @@
-/***************************************************/
-/* Cairo library functions used for COIL-3D viewer */
-/***************************************************/
+/*
+ * Cairo library functions used for COIL-3D viewer
+ * Ben Fletcher (bjf1g13@soton.ac.uk)
+ *
+ * Copyright (c) 2020, Arm-ECS Research Centre (arm.ecs.soton.ac.uk) 
+ */
 
 // Graphics Libraries for viewer
 #include <X11/Xlib.h>

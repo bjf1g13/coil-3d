@@ -1,3 +1,10 @@
+/*
+ * COIL-3D GUI Parameters 
+ * Ben Fletcher (bjf1g13@soton.ac.uk)
+ *
+ * Copyright (c) 2020, Arm-ECS Research Centre (arm.ecs.soton.ac.uk) 
+ */
+
 // Window Height
 #define HEIGHT 500
 
