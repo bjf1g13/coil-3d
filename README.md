@@ -29,37 +29,40 @@ A pdf version of this paper can also be [downloaded here](https://eprints.soton.
 ### Dependancies
 Compiling COIL-3D tool requires libconfig and cairo to be installed and avaialable on your system. Using the aptitude package manager, these can be installed using:
 ```bash
-sudo apt-get install libconfig-dev
-apt-get install libcairo2-dev
+> apt-get install libconfig-dev
+> apt-get install libcairo2-dev
 ```
 
 ### Compiling COIL-3D
 Once the required libraries are available, the COIL-3D tool can be compiled using the makefile provided, by cloning the repositry and running make:
 ```bash
-git clone https://github.com/bjf1g13/coil-3d.git
-cd coil-3d
-make
+> git clone https://github.com/bjf1g13/coil-3d.git
+> cd coil-3d
+> make
 ```
 
 ### Running COIL-3D
 The COIL-3D tool is, by default, supplied with an example configuration file to specify the maximum inner and outer area of the inductor, the min/max matal width/spacing, the communication distance, the target operating frequency etc.
-This configuration file can be edited as required, and passed to the solver using the command:
+This configuration file can be edited as required, and passed to the solver using the '-c' flag:
 
 ```bash
-./COIL-3D -c confifg_file.cfg
+~/coil-3d$ ./COIL-3D -c example_config.cfg -t example_techfile.tf -o inductor_1
 ```
+The tool also takes an HFSS technology file as an argument (using the '-t') flag, to specify the layer thicknesses within the 3D stack. Finally, an optional argument -o can also be used to specify the name of the output directory where the generated output data/design will be saved.
 
-An optional argument -o can also be used to specify the name of the output directory where the generated output data/design will be saved:
+An example runme script (./RUNME_EXAMPLE.sh) is provided to run a demo of the tool with these default example templates, but each of the parameters in the technology and configuration files can be adjusted according to the specific project you are working on.
 
+The arguments available to the COIL-3D tool can also be displayed using the help flag:
 ```bash
-./COIL-3D -c confifg_file.cfg -o inductor_1
+~/coil-3d$ ./COIL-3D -h
+COIL-3D [-v] [-c configuration inputfile] [-t technology inputfile] [-o output dir]  [-h]
 ```
-
 ## File Structure
 
 Directory structure:
 Directory | Description
 --------- | -----------
+./docs | Images and documentation related to the tool
 ./solver | Expressions for calculating the **electrical** parameters of a given layout from its **physical** layout parameters
 ./optimiser | The main optimisation algorithm used for determining best-performing coil layouts
 ./viewer | The COIL-3D graphical viewer
