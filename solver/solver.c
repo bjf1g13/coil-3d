@@ -1,3 +1,10 @@
+/*
+ * COIL-3D Solver
+ * Ben Fletcher (bjf1g13@soton.ac.uk)
+ *
+ * Copyright (c) 2020, Arm-ECS Research Centre (arm.ecs.soton.ac.uk) 
+ */
+
 // External Includes
 #include <stdio.h>
 #include <stdlib.h>

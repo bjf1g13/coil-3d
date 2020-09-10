@@ -83,6 +83,10 @@ int main(int argc, char *argv[]) {
               }
               break;
 
+           case 'v':
+              options.verbose += 1;
+              break;
+
            case 'h':
            default:
               usage(basename(argv[0]), opt);

@@ -1,6 +1,9 @@
-/********************************************/
-/* Math functions for use in COIL-3D Solver */
-/********************************************/
+/*
+ * COIL-3D Math Functions
+ * Ben Fletcher (bjf1g13@soton.ac.uk)
+ *
+ * Copyright (c) 2020, Arm-ECS Research Centre (arm.ecs.soton.ac.uk) 
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

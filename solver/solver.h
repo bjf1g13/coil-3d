@@ -1,3 +1,10 @@
+/*
+ * COIL-3D Solver
+ * Ben Fletcher (bjf1g13@soton.ac.uk)
+ *
+ * Copyright (c) 2020, Arm-ECS Research Centre (arm.ecs.soton.ac.uk) 
+ */
+
 #ifndef SOLVER_H
 #define SOLVER_H
 
@@ -13,4 +20,5 @@ double capacitance(double l, double s);
 double efficiency(double m, double l, double r, double c, double f);
 // Run the solver
 double solve(double d_o, double w, double s, int n, double mu, double d, double f, double RL, cairo_t *ctx);
+
 #endif // SOLVER_H

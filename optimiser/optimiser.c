@@ -78,11 +78,13 @@ int optimiser(double * cfg_opts, int verbose, char * output_dir)
    time_t ltime; 
    ltime=time(NULL);
 
-   printf("\n#################################################\n");
-   printf("### COIL-3D | Inductive Link Layout Optimiser ###\n");
-   printf("#################################################\n");
+   if(verbose) {
+     printf("\n#################################################\n");
+     printf("### COIL-3D | Inductive Link Layout Optimiser ###\n");
+     printf("#################################################\n");
 
-   printf("# %s# Successfully read config file \n",asctime( localtime(&ltime)));
+     printf("# %s# Successfully read config file \n",asctime( localtime(&ltime)));
+   }
    
    int logging = 0;
    int threed  = 0;
@@ -109,7 +111,9 @@ int optimiser(double * cfg_opts, int verbose, char * output_dir)
    cairo_move_to (ctx, 0, 0);
 
    nanosleep(&ts, NULL);
-   printf("> %s# Starting  Optimisation \n",asctime( localtime(&ltime)));
+   if(verbose) {
+     printf("> %s# Starting  Optimisation \n",asctime( localtime(&ltime)));
+   }
    
    double high_score = 0.00;
    double score = 0.00;
@@ -119,7 +123,9 @@ int optimiser(double * cfg_opts, int verbose, char * output_dir)
    
    while (running)
    {
-         printf("> %s# Optimising Fill-Factor \n",asctime( localtime(&ltime)));
+         if(verbose) {
+          printf("> %s# Optimising Fill-Factor \n",asctime( localtime(&ltime)));
+         }
          int j;
          for(j = 1;j<d_o/((w+s)*2);j++)
          {
@@ -142,9 +148,10 @@ int optimiser(double * cfg_opts, int verbose, char * output_dir)
       }
       d_i = d_o - (optimal_n * 2 * (w + s));
       double fill_factor = (d_o - d_i)/(d_o + d_i);
-      printf("> %s# Optimising Fill-Factor Complete - Best Value is : %f \n",asctime( localtime(&ltime)), fill_factor);
-      printf("# Optimising Line Width ... \n");
-
+      if(verbose) {
+        printf("> %s# Optimising Fill-Factor Complete - Best Value is : %f \n",asctime( localtime(&ltime)), fill_factor);
+        printf("# Optimising Line Width ... \n");
+      }
       high_score = 0;
 
       double width = w_min;
@@ -170,8 +177,9 @@ int optimiser(double * cfg_opts, int verbose, char * output_dir)
             width = width + W_PRECISION;
             usleep(DELAY);
       }
-
-      printf("# Optimised Track Width: %.10e\n", optimal_w );
+      if(verbose) {
+        printf("# Optimised Track Width: %.10e\n", optimal_w );
+      }
       high_score = 0;
 
       double spacing = s_min;
@@ -198,12 +206,15 @@ int optimiser(double * cfg_opts, int verbose, char * output_dir)
             spacing = spacing + S_PRECISION;
             usleep(DELAY);
       }
-
-      printf("# Optimised Track Spacing: %.10e\n", optimal_s);
+      if(verbose) {
+        printf("# Optimised Track Spacing: %.10e\n", optimal_s);
+      }
 
       if(logging)
       {
-         printf("# Optimising width/spacing ... \n");
+         if(verbose) {
+           printf("# Optimising width/spacing ... \n");
+         }
          double eta;
 
          for(width=w_min;width<w_max;width = width + W_PRECISION)
@@ -236,8 +247,10 @@ int optimiser(double * cfg_opts, int verbose, char * output_dir)
       double l = draw_inductor(ctx, n, d_o/SCALE, w/SCALE, s/SCALE, tab/SCALE);
 
       /* Generate Netlist */
-      FILE *netlist_fd = fopen("netlist.net", "w");
 
+      char netlist_fname[] = "/netlist.net";
+      strcat(output_dir, netlist_fname);
+      FILE *netlist_fd = fopen(output_dir, "w");
       fprintf(netlist_fd, "* 4-Port Model\n");
       fprintf(netlist_fd, "* In: IN+ to IN-\n");
       fprintf(netlist_fd, "* Out: OUT+ to OUT-\n\n");
@@ -248,12 +261,24 @@ int optimiser(double * cfg_opts, int verbose, char * output_dir)
       fprintf(netlist_fd, "/netlist.net\n\n");
       fprintf(netlist_fd, "L1 IN+ IN- %.10eL Rser=%.10e Cpar=%.10e\n",self_inductance(d_o, d_i, n, mu),resistance(f,l,w),capacitance(l,s));
       fprintf(netlist_fd, "L1 OUT- OUT+ %.10eL Rser=%.10e Cpar=%.10e\n",self_inductance(d_o, d_i, n, mu),resistance(f,l,w),capacitance(l,s));
-      fprintf(netlist_fd,"K1 L1 L2 %.10e", mutual_inductance(d_o, d, mu, w, s, n)/self_inductance(d_o, d_i, n, mu));
+      fprintf(netlist_fd, "K1 L1 L2 %.10e", mutual_inductance(d_o, d, mu, w, s, n)/self_inductance(d_o, d_i, n, mu));
       fprintf(netlist_fd, ".end\n");
-
       fclose(netlist_fd);
+      
+      /* Generate Outputfile */
 
-      printf("# Complete!\n# >");
+      char output_fname[] = "/resuts.txt";
+      strcat(output_dir, output_fname);
+      FILE *output_fd = fopen(output_dir, "w");
+      fprintf(output_fd, "Optimal Track Width     : %f m\n", optimal_w );
+      fprintf(output_fd, "Optimal Track Spacing   : %f m\n", optimal_s );
+      fprintf(output_fd, "Optimal Outer Diameter  : %f m\n", d_o );
+      fprintf(output_fd, "Optimal Number of Turns : %d m\n", optimal_n );
+      fclose(netlist_fd);
+      
+      if(verbose){
+        printf("# Complete!\n# >");
+      }
 
       while(1)
       {
